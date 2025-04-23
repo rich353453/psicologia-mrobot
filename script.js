@@ -1,223 +1,132 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sentimentos por Elliot</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <header>
-    <div class="logo">NETFLIX <span class="sub">Mr. Robot</span></div>
-    <nav>
-      <a href="#">Início</a>
-      <a href="#">Séries</a>
-      <a href="#">Minha Lista</a>
-    </nav>
-  </header>
+// Controle do vídeo
+const video = document.querySelector('#bg-video');
+const playVideoBtn = document.querySelector('.btn-play');
+const infoButton = document.querySelector('.btn-info');
+const overlay = document.querySelector('.highlight-overlay');
 
-  <div class="highlight">
-    <div class="highlight-overlay">
-      <img src="juntos.png" alt="Imagem de Fundo" class="highlight-image" />
-    </div>
-    <video id="bg-video" loop>
-      <source src="mr-robot-bg - Copia.mp4" type="video/mp4" />
-      Seu navegador não suporta vídeos.
-    </video>
-    <div class="highlight-content">
-      <h1>Conexões e Sentimentos</h1>
-      <p>Explore as complexidades das emoções humanas através de histórias que conectam e inspiram.</p>
-      <div class="highlight-buttons">
-        <button class="btn-play">▶ Assistir</button>
-        <button class="btn-info">ℹ️ Mais informações</button>
+// Função para reproduzir o vídeo
+playVideoBtn.addEventListener('click', () => {
+  overlay.classList.add('hidden');
+  video.muted = false;
+  video.play().then(() => {
+    if (video.requestFullscreen) {
+      video.requestFullscreen();
+    } else if (video.webkitRequestFullscreen) {
+      video.webkitRequestFullscreen();
+    } else if (video.msRequestFullscreen) {
+      video.msRequestFullscreen();
+    }
+  }).catch(err => {
+    console.error('Erro ao reproduzir o vídeo:', err);
+    alert('Não foi possível reproduzir o vídeo. Verifique o console para detalhes.');
+  });
+});
+
+// Função para exibir mais informações
+infoButton.addEventListener('click', () => {
+  const modal = document.createElement('div');
+  modal.style.cssText = `
+    position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    background: #222; color: #fff; padding: 20px; border-radius: 8px;
+    z-index: 100; max-width: 500px; text-align: center;
+  `;
+  modal.innerHTML = `
+    <h2>Conexões e Sentimentos</h2>
+    <p>Explore as emoções dos personagens de Mr. Robot e suas conexões com histórias reais.</p>
+    <button onclick="this.parentElement.remove()">Fechar</button>
+  `;
+  document.body.appendChild(modal);
+});
+
+// Controle do carrossel
+const carouselTrack = document.querySelector('.carousel-track');
+const leftArrow = document.querySelector('.left-arrow');
+const rightArrow = document.querySelector('.right-arrow');
+
+// Evento para rolar o carrossel
+leftArrow.addEventListener('click', () => {
+  carouselTrack.scrollBy({ left: -300, behavior: 'smooth' });
+});
+
+rightArrow.addEventListener('click', () => {
+  carouselTrack.scrollBy({ left: 300, behavior: 'smooth' });
+});
+
+// Função para fechar qualquer card expandido existente
+function closeExpandedCard() {
+  const existingExpanded = document.querySelector('.card-expanded');
+  if (existingExpanded) {
+    existingExpanded.remove();
+  }
+}
+
+// Expansão do card ao clicar
+document.querySelectorAll('.card').forEach(card => {
+  card.addEventListener('click', (e) => {
+    // Evitar abrir detalhes completos ao clicar no card expandido
+    if (e.target.closest('.card-expanded')) return;
+
+    // Fechar qualquer card expandido existente
+    closeExpandedCard();
+
+    // Remover estado ativo de outros cards
+    document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+
+    // Obter dados do card
+    const imgSrc = card.querySelector('img').src;
+    const title = card.querySelector('h2').textContent;
+    const detalhesCompleto = card.querySelector('.detalhes-completo').innerHTML;
+    const actor = card.dataset.actor;
+    const sinopse = card.dataset.sinopse;
+
+    // Criar o card expandido
+    const expandedCard = document.createElement('div');
+    expandedCard.classList.add('card-expanded');
+    expandedCard.innerHTML = `
+      <button class="close-btn">✖</button>
+      <img src="${imgSrc}" alt="${title}" />
+      <div class="card-expanded-content">
+        <h2>${title}</h2>
+        <div class="card-expanded-meta">
+          <span>2015</span>
+          <span>45min por episódio</span>
+          <span>Elenco: ${actor}</span>
+          <span>Gêneros: Drama, Suspense, Tecnologia</span>
+        </div>
+        <div class="card-expanded-buttons">
+          <button class="btn-play">▶ Assistir</button>
+          <button class="btn-add">+ Minha Lista</button>
+        </div>
+        <p>${sinopse}</p>
+        ${detalhesCompleto}
       </div>
-    </div>
-  </div>
+    `;
 
-  <section class="carousel">
-    <h2 class="carousel-title">Séries Dramáticas</h2>
-    <div class="carousel-container">
-      <button class="arrow left-arrow">❮</button>
-      <ul class="carousel-track">
-        <!-- Darlene -->
-        <li class="card" data-actor="Carly Chaikin" data-sinopse="Darlene é uma hacker talentosa que luta para se conectar emocionalmente enquanto planeja revoluções digitais.">
-          <img src="Darlene.jpg" alt="Darlene" />
-          <div class="card-content">
-            <h2>Darlene</h2>
-            <span class="tag">Frustração</span>
-            <p>Como Rayssa, quer conexão, mas sente distância.</p>
-            <p class="detalhes">Hacker genial, Darlene luta para se conectar com Elliot e carrega o peso de suas escolhas. Sua busca por laços reflete a frustração de Rayssa.</p>
-            <div class="detalhes-completo">
-              <h3>Papel na história</h3>
-              <p>Darlene Alderson (Carly Chaikin) é a irmã mais nova de Elliot e uma hacker talentosa do fsociety. Ela ajuda a planejar o ataque Five/Nine contra a E Corp e é uma das poucas pessoas próximas a Elliot, apesar de suas tensões familiares.</p>
-              <h3>Personalidade e traços</h3>
-              <p>Sarcástica, direta e leal, Darlene é confiante por fora, mas luta com insegurança e culpa pelas consequências de suas ações. É uma programadora brilhante, mas emocionalmente vulnerável.</p>
-              <h3>Conexão com "Frustração"</h3>
-              <p>Associada a Rayssa, que busca conexão, mas sente distância. Darlene reflete isso ao tentar se reaproximar de Elliot e manter o fsociety unido, mas frequentemente enfrenta rejeição ou barreiras emocionais, o que gera frustração.</p>
-            </div>
-          </div>
-        </li>
+    document.body.appendChild(expandedCard);
 
-        <!-- Mr. Robot -->
-        <li class="card" data-actor="Christian Slater" data-sinopse="Mr. Robot é a manifestação da raiva e visão revolucionária de Elliot, liderando uma guerra contra o sistema.">
-          <img src="mrrobot.jpg" alt="Mr. Robot" />
-          <div class="card-content">
-            <h2>Mr. Robot</h2>
-            <span class="tag">Determinação</span>
-            <p>Como Rafael, quer guiar com paixão e cobrança.</p>
-            <p class="detalhes">Líder do fsociety, Mr. Robot é a força revolucionária de Elliot. Sua determinação implacável ecoa a paixão de Rafael.</p>
-            <div class="detalhes-completo">
-              <h3>Papel na história</h3>
-              <p>Mr. Robot (Christian Slater) é uma personalidade alternativa de Elliot, inspirada em seu pai, Edward, devido a seu transtorno dissociativo de identidade. Líder carismático do fsociety, ele planeja derrubar a E Corp, mas é manipulador e agressivo quando perde o controle.</p>
-              <h3>Personalidade e traços</h3>
-              <p>Carismático, visionário e instável, Mr. Robot representa a coragem e a raiva de Elliot contra o sistema, mas sua obsessão por controle cria conflitos internos.</p>
-              <h3>Conexão com "Determinação"</h3>
-              <p>Associado a Rafael, que guia com paixão e cobrança. Mr. Robot reflete essa determinação ao liderar o fsociety com uma visão revolucionária, mesmo que isso cause caos.</p>
-            </div>
-          </div>
-        </li>
+    // Fechar o card expandido ao clicar no botão "X"
+    expandedCard.querySelector('.close-btn').addEventListener('click', () => {
+      expandedCard.remove();
+    });
 
-        <!-- Angela -->
-        <li class="card" data-actor="Portia Doubleday" data-sinopse="Angela busca justiça contra a E Corp, mas é tragada por manipulações e dilemas morais.">
-          <img src="angela.webp" alt="Angela" />
-          <div class="card-content">
-            <h2>Angela</h2>
-            <span class="tag">Tristeza</span>
-            <p>Como minha namorada, tenta estar presente, mas é afastada.</p>
-            <p class="detalhes">Amiga de Elliot, Angela busca justiça, mas é consumida por manipulações. Sua tristeza reflete o isolamento de sua namorada.</p>
-            <div class="detalhes-completo">
-              <h3>Papel na história</h3>
-              <p>Angela Moss (Portia Doubleday) é amiga de infância de Elliot e trabalha na Allsafe, mas depois se junta à E Corp. Movida por vingança contra a E Corp pela morte de sua mãe, ela se envolve com a Dark Army, enfrentando dilemas morais.</p>
-              <h3>Personalidade e traços</h3>
-              <p>Inteligente, ambiciosa e emocionalmente frágil, Angela passa de insegura a determinada, mas sua busca por propósito a leva a escolhas trágicas.</p>
-              <h3>Conexão com "Tristeza"</h3>
-              <p>Associada à sua namorada, que tenta estar presente, mas é afastada. Angela reflete essa tristeza ao buscar conexão com Elliot e justiça, mas ser manipulada e isolada.</p>
-            </div>
-          </div>
-        </li>
+    // Impedir que o clique no card expandido propague
+    expandedCard.addEventListener('click', (e) => {
+      e.stopPropagation();
+    });
+  });
 
-        <!-- Tyrell -->
-        <li class="card" data-actor="Martin Wallström" data-sinopse="Tyrell é um executivo obcecado por poder, cuja inveja por Elliot o leva a extremos.">
-          <img src="tyrell.png" alt="Tyrell" />
-          <div class="card-content">
-            <h2>Tyrell</h2>
-            <span class="tag">Inveja</span>
-            <p>Como Elson, admira e desconfia ao mesmo tempo.</p>
-            <p class="detalhes">Executivo da E Corp, Tyrell inveja o brilho de Elliot. Sua ambição instável reflete os conflitos de Elson.</p>
-            <div class="detalhes-completo">
-              <h3>Papel na história</h3>
-              <p>Tyrell Wellick (Martin Wallström) é um executivo ambicioso da E Corp, obcecado por poder e por Elliot. Ele se alia ao fsociety e à Dark Army, mas sua admiração por Elliot o torna instável.</p>
-              <h3>Personalidade e traços</h3>
-              <p>Calculista, emocionalmente volátil e carismático, Tyrell combina inteligência técnica com uma necessidade constante de validação, o que alimenta sua inveja.</p>
-              <h3>Conexão com "Inveja"</h3>
-              <p>Associado a Elson, que admira e desconfia. Tyrell inveja o gênio de Elliot e sua capacidade de liderar, levando-o a ações extremas.</p>
-            </div>
-          </div>
-        </li>
+  // Mostrar detalhes completos no hover/clique (mantido para dispositivos móveis)
+  card.addEventListener('click', (e) => {
+    if (!document.querySelector('.card-expanded')) {
+      document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+      card.classList.add('active');
+    }
+  });
+});
 
-        <!-- Edward -->
-        <li class="card" data-actor="Christian Slater" data-sinopse="Edward, pai de Elliot, deixa um legado de amor e trauma que molda a vida de seus filhos.">
-          <img src="edward.webp" alt="Edward" />
-          <div class="card-content">
-            <h2>Edward</h2>
-            <span class="tag">Culpa</span>
-            <p>Como minha mãe, amor com ausência e dor.</p>
-            <p class="detalhes">Pai de Elliot, Edward deixou um legado de amor e trauma. Sua ausência dolorosa ecoa a culpa de sua mãe.</p>
-            <div class="detalhes-completo">
-              <h3>Papel na história</h3>
-              <p>Edward Alderson (Christian Slater, em flashbacks) é o pai de Elliot e Darlene, que morreu de leucemia devido à exposição tóxica na E Corp. Mais tarde, revela-se que ele abusou sexualmente de Elliot, causando traumas profundos.</p>
-              <h3>Personalidade e traços</h3>
-              <p>Inicialmente visto como um pai amoroso, Edward é complexo e sombrio após a revelação de seu abuso, contrastando com a idealização de Mr. Robot.</p>
-              <h3>Conexão com "Culpa"</h3>
-              <p>Associado à sua mãe, com "amor com ausência e dor". Edward reflete isso ao ser uma figura amada por Elliot, mas cuja morte e ações traumáticas geram culpa.</p>
-            </div>
-          </div>
-        </li>
-
-        <!-- Krista -->
-        <li class="card" data-actor="Gloria Reuben" data-sinopse="Krista é a terapeuta de Elliot, oferecendo apoio emocional em meio a seus traumas.">
-          <img src="krista.jpg" alt="Krista" />
-          <div class="card-content">
-            <h2>Krista</h2>
-            <span class="tag">Compaixão</span>
-            <p>Como Helena, acolhe, mas enfrenta resistência.</p>
-            <p class="detalhes">Terapeuta de Elliot, Krista oferece apoio com empatia. Sua compaixão reflete a acolhida de Helena.</p>
-            <div class="detalhes-completo">
-              <h3>Papel na história</h3>
-              <p>Krista Gordon (Gloria Reuben) é a terapeuta de Elliot, ajudando-o a lidar com seu transtorno dissociativo e traumas. Ela descobre a verdade sobre Mr. Robot e o abuso de Edward, sendo uma figura de apoio constante.</p>
-              <h3>Personalidade e traços</h3>
-              <p>Empática, calma e perspicaz, Krista é uma das poucas que realmente ajudam Elliot, enfrentando sua resistência com paciência.</p>
-              <h3>Conexão com "Compaixão"</h3>
-              <p>Associada a Helena, que acolhe, mas enfrenta resistência. Krista reflete isso ao oferecer apoio incondicional a Elliot, mesmo quando ele se fecha.</p>
-            </div>
-          </div>
-        </li>
-
-        <!-- Shayla -->
-        <li class="card" data-actor="Frankie Shaw" data-sinopse="Shayla é uma fonte de conexão humana para Elliot, mas sua vulnerabilidade a coloca em risco.">
-          <img src="shayla.jpg" alt="Shayla" />
-          <div class="card-content">
-            <h2>Shayla</h2>
-            <span class="tag">Vulnerabilidade</span>
-            <p>Como Adão, segura sem forçar palavras.</p>
-            <p class="detalhes">Vizinha de Elliot, Shayla oferece apoio genuíno. Sua vulnerabilidade reflete a força silenciosa de Adão.</p>
-            <div class="detalhes-completo">
-              <h3>Papel na história</h3>
-              <p>Shayla Nico (Frankie Shaw) é vizinha de Elliot, interesse amoroso na 1ª temporada e sua fornecedora de drogas. Leal e vulnerável, ela oferece apoio emocional, mas sua história termina tragicamente.</p>
-              <h3>Personalidade e traços</h3>
-              <p>Acolhedora, autêntica e emocionalmente aberta, Shayla é uma rara fonte de conexão humana para Elliot, mas sua vulnerabilidade a coloca em risco.</p>
-              <h3>Conexão com "Vulnerabilidade"</h3>
-              <p>Associada a Adão, que "segura sem forçar palavras". Shayla reflete isso ao apoiar Elliot com autenticidade, sem esconder suas fraquezas.</p>
-            </div>
-          </div>
-        </li>
-
-        <!-- Gideon -->
-        <li class="card" data-actor="Michel Gill" data-sinopse="Gideon é um chefe ético que tenta proteger sua equipe, mas suas suspeitas criam tensão.">
-          <img src="gideon.jpg" alt="Gideon" />
-          <div class="card-content">
-            <h2>Gideon</h2>
-            <span class="tag">Preocupação</span>
-            <p>Como Zico, respeita, mas cria tensão.</p>
-            <p class="detalhes">Chefe de Elliot, Gideon protege com ética, mas desconfia. Sua preocupação reflete a tensão de Zico.</p>
-            <div class="detalhes-completo">
-              <h3>Papel na história</h3>
-              <p>Gideon Goddard (Michel Gill) é o chefe de Elliot na Allsafe, um líder ético que tenta proteger sua empresa e equipe. Ele suspeita das ações de Elliot, criando tensão no trabalho.</p>
-              <h3>Personalidade e traços</h3>
-              <p>Honesto, preocupado e respeitável, Gideon valoriza seus funcionários, mas sua desconfiança gera conflitos com Elliot.</p>
-              <h3>Conexão com "Preocupação"</h3>
-              <p>Associado a Zico, que respeita, mas cria tensão. Gideon reflete isso ao tentar proteger Elliot, mas suas suspeitas geram um ambiente tenso.</p>
-            </div>
-          </div>
-        </li>
-
-        <!-- Elliot -->
-        <li class="card" data-actor="Rami Malek" data-sinopse="Elliot é um hacker brilhante que luta contra seus próprios demônios enquanto tenta mudar o mundo.">
-          <img src="elliot.jpg" alt="Elliot" />
-          <div class="card-content">
-            <h2>Elliot</h2>
-            <span class="tag">Confusão</span>
-            <p>Como eu, vive conflitos internos e busca sentido.</p>
-            <p class="detalhes">Gênio do hacking, Elliot vive entre realidades e traumas. Sua confusão, marcada por TDAH e TEA, reflete meu conflito interno.</p>
-            <div class="detalhes-completo">
-              <h3>Papel na história</h3>
-              <p>Elliot Alderson (Rami Malek) é o protagonista, um hacker com transtorno dissociativo de identidade, ansiedade social, e depressão. Ele lidera o fsociety para derrubar a E Corp, lutando com suas personalidades e traumas.</p>
-              <h3>Personalidade e traços</h3>
-              <p>Brilhante, introspectivo, e socialmente desconfortável, Elliot tem foco intenso em hacking (sugestivo de TEA) e impulsividade em ações arriscadas (sugestivo de TDAH). Ele prefere solitude e temas complexos.</p>
-              <h3>Conexão com "Confusão"</h3>
-              <p>Associado a você, que vive conflitos internos e busca sentido. Elliot reflete a confusão de alguém neurodivergente, equilibrando emoções e identidades.</p>
-            </div>
-          </div>
-        </li>
-      </ul>
-      <button class="arrow right-arrow">❯</button>
-    </div>
-  </section>
-
-  <footer class="footer">
-    <p>Projeto dedicado com carinho à minha psicóloga Amanda, por todo o apoio e orientação. ❤️</p>
-  </footer>
-
-  <script src="script.js"></script>
-</body>
-</html>
+// Fechar o card expandido ao clicar fora dele
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.card') && !e.target.closest('.card-expanded')) {
+    closeExpandedCard();
+  }
+});
