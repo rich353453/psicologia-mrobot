@@ -2,58 +2,120 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Proteção por Senha</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background-color: #141414;
-      color: white;
-    }
-    .login-container {
-      text-align: center;
-    }
-    input {
-      padding: 10px;
-      margin: 10px 0;
-      border: none;
-      border-radius: 5px;
-    }
-    button {
-      padding: 10px 20px;
-      border: none;
-      border-radius: 5px;
-      background-color: #e50914;
-      color: white;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #d40813;
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tabela de Sentimentos por Elliot</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="login-container">
-    <h1>Digite a Senha</h1>
-    <input type="password" id="password" placeholder="Senha" />
-    <button onclick="checkPassword()">Entrar</button>
+  <video id="bg-video" loop autoplay controls>
+        <source src="mr-robot-bg - Copia.mp4" type="video/mp4">
+        <img src="mrrobotbck.jpg" alt="Mr. Robot Background" class="bg-image">
+      </video>
+
+  <header>
+    <div class="logo">NETFLIX <span class="sub">Mr. Robot</span></div>
+    <nav>
+      <a href="#">Início</a>
+      <a href="#">Séries</a>
+      <a href="#">Minha Lista</a>
+    </nav>
+  </header>
+
+  <div class="main-title">
+    <h1>Sentimentos por Elliot</h1>
+    <p>Inspirado em conexões reais</p>
+    
+    <button id="play-video-btn" class="btn-play">▶ Tocar Vídeo</button>
   </div>
 
-  <script>
-    function checkPassword() {
-      const password = document.getElementById("password").value;
-      const correctPassword = "dog123"; // Substitua pela senha desejada
+  <section class="carousel">
+    <div class="carousel-container">
+      <button class="arrow left-arrow">❮</button>
+      <ul class="carousel-track">
+        <!-- Darlene -->
+        <li class="card">
+          <img src="Darlene.jpg" alt="Darlene">
+          <div class="card-content">
+            <h2>Darlene</h2>
+            <span class="tag">Frustração</span>
+            <p>Como Rayssa, quer conexão, mas sente distância.</p>
+          </div>
+        </li>
 
-      if (password === correctPassword) {
-        window.location.href = "index.html"; // Redireciona para o site
-      } else {
-        alert("Senha incorreta!");
-      }
-    }
-  </script>
+        <!-- Mr. Robot -->
+        <li class="card">
+          <img src="mrrobot.jpg" alt="Mr. Robot">
+          <div class="card-content">
+            <h2>Mr. Robot</h2>
+            <span class="tag">Determinação</span>
+            <p>Como Rafael, quer guiar com paixão e cobrança.</p>
+          </div>
+        </li>
+
+        <!-- Angela -->
+        <li class="card">
+          <img src="angela.webp" alt="Angela">
+          <div class="card-content">
+            <h2>Angela</h2>
+            <span class="tag">Tristeza</span>
+            <p>Como minha namorada, tenta estar presente, mas é afastada.</p>
+          </div>
+        </li>
+
+        <!-- Tyrell -->
+        <li class="card">
+          <img src="tyrell.png" alt="Tyrell">
+          <div class="card-content">
+            <h2>Tyrell</h2>
+            <span class="tag">Inveja</span>
+            <p>Como Elson, admira e desconfia ao mesmo tempo.</p>
+          </div>
+        </li>
+
+        <!-- Edward -->
+        <li class="card">
+          <img src="edward.webp" alt="Edward">
+          <div class="card-content">
+            <h2>Edward</h2>
+            <span class="tag">Culpa</span>
+            <p>Como minha mãe, amor com ausência e dor.</p>
+          </div>
+        </li>
+
+        <!-- Krista -->
+        <li class="card">
+          <img src="krista.webp" alt="Krista">
+          <div class="card-content">
+            <h2>Krista</h2>
+            <span class="tag">Compaixão</span>
+            <p>Como Helena, acolhe mas enfrenta resistência.</p>
+          </div>
+        </li>
+
+        <!-- Shayla -->
+        <li class="card">
+          <img src="shayla.jpg" alt="Shayla">
+          <div class="card-content">
+            <h2>Shayla</h2>
+            <span class="tag">Vulnerabilidade</span>
+            <p>Como Adão, segura sem forçar palavras.</p>
+          </div>
+        </li>
+
+        <!-- Gideon -->
+        <li class="card">
+          <img src="gideon.jpg" alt="Gideon">
+          <div class="card-content">
+            <h2>Gideon</h2>
+            <span class="tag">Preocupação</span>
+            <p>Como Zico, respeita mas cria tensão.</p>
+          </div>
+        </li>
+      </ul>
+      <button class="arrow right-arrow">❯</button>
+    </div>
+  </section>
+
+  <script src="script.js"></script>
 </body>
 </html>
