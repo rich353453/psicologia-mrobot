@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Proteção por Senha</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #141414;
+      color: white;
+    }
+    .login-container {
+      text-align: center;
+    }
+    input {
+      padding: 10px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 5px;
+    }
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      background-color: #e50914;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #d40813;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h1>Digite a Senha</h1>
+    <input type="password" id="password" placeholder="Senha" />
+    <button onclick="checkPassword()">Entrar</button>
+  </div>
+
+  <script>
+    function checkPassword() {
+      const password = document.getElementById("password").value;
+      const correctPassword = "dog123"; // Substitua pela senha desejada
+
+      if (password === correctPassword) {
+        window.location.href = "index.html"; // Redireciona para o site
+      } else {
+        alert("Senha incorreta!");
+      }
+    }
+  </script>
+</body>
+</html>
