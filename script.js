@@ -29,6 +29,7 @@ infoButton.addEventListener('click', () => {
     position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
     background: #222; color: #fff; padding: 20px; border-radius: 8px;
     z-index: 100; max-width: 500px; text-align: center;
+    animation: fadeIn 0.3s ease;
   `;
   modal.innerHTML = `
     <h2>Conexões e Sentimentos</h2>
@@ -56,7 +57,8 @@ rightArrow.addEventListener('click', () => {
 function closeExpandedCard() {
   const existingExpanded = document.querySelector('.card-expanded');
   if (existingExpanded) {
-    existingExpanded.remove();
+    existingExpanded.classList.add('fade-out');
+    setTimeout(() => existingExpanded.remove(), 300); // Aguarda a animação antes de remover
   }
 }
 
@@ -75,9 +77,9 @@ document.querySelectorAll('.card').forEach(card => {
     // Obter dados do card
     const imgSrc = card.querySelector('img').src;
     const title = card.querySelector('h2').textContent;
-    const detalhesCompleto = card.querySelector('.detalhes-completo').innerHTML;
-    const actor = card.dataset.actor;
-    const sinopse = card.dataset.sinopse;
+    const detalhesCompleto = card.querySelector('.detalhes-completo')?.innerHTML || '';
+    const actor = card.dataset.actor || 'Desconhecido';
+    const sinopse = card.dataset.sinopse || 'Sinopse não disponível.';
 
     // Criar o card expandido
     const expandedCard = document.createElement('div');
@@ -102,25 +104,20 @@ document.querySelectorAll('.card').forEach(card => {
       </div>
     `;
 
+    // Adicionar animação de entrada
+    expandedCard.style.animation = 'fadeIn 0.3s ease';
+
     document.body.appendChild(expandedCard);
 
     // Fechar o card expandido ao clicar no botão "X"
     expandedCard.querySelector('.close-btn').addEventListener('click', () => {
-      expandedCard.remove();
+      closeExpandedCard();
     });
 
     // Impedir que o clique no card expandido propague
     expandedCard.addEventListener('click', (e) => {
       e.stopPropagation();
     });
-  });
-
-  // Mostrar detalhes completos no hover/clique (mantido para dispositivos móveis)
-  card.addEventListener('click', (e) => {
-    if (!document.querySelector('.card-expanded')) {
-      document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
-      card.classList.add('active');
-    }
   });
 });
 
@@ -130,3 +127,34 @@ document.addEventListener('click', (e) => {
     closeExpandedCard();
   }
 });
+
+// Animação de fade-in e fade-out
+const style = document.createElement('style');
+style.innerHTML = `
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+      transform: scale(1);
+    }
+    to {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+  }
+
+  .fade-out {
+    animation: fadeOut 0.3s ease forwards;
+  }
+`;
+document.head.appendChild(style);
